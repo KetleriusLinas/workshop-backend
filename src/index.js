@@ -13,19 +13,36 @@ const port = 5505;
 app.use(express.json());
 
 const books = [
-    { id: 1, author: 'Kobo Abe', title: 'The box-man' },
-    { id: 2, author: 'Obi Van Kenobi', title: 'The D' },
-    { id: 3, author: 'Luck', title: 'I\'m Your Father' },
+    {
+        id: 1,
+        author: 'Kobo Abe',
+        title: 'The box-man'
+    },
+    {
+        id: 2,
+        author: 'Obi Van Kenobi',
+        title: 'The D'
+    },
+    {
+        id: 3,
+        author: 'Luke',
+        title: 'I\'m Your Father'
+    },
 ];
 
 
-app.get('/', (req, res) => { res.send('It\'s a live') });
+app.get('/', (req, res) => {
+    res.send('It\'s a live');
+});
 
-app.get('/demo', (req, res) => { res.send([a, b, c]) });
+app.get('/demo', (req, res) => {
+    res.send(['a', 'b', 'c']);
+});
 
+//Params
 app.get('/demo/:id', (req, res) => {
     const id = req.params.id;
-    res.send(id)
+    res.send(id);
 });
 
 app.get('/demo/:cat/:id', (req, res) => {
@@ -37,21 +54,24 @@ app.get('/demo/:cat/:id', (req, res) => {
 //Query
 app.get('/query', (req, res) => {
     const q = req.query;
-    res.send(q)
+    res.send(q);
 });
-//--------------------------------
+//----------------APP----------------
+
+//Get - read
 app.get('/api/books', (req, res) => {
-    res.send(books)
+    res.send(books);
 });
 app.get('/api/books/:id', (req, res) => {
     const book = books.find((book) => book.id === parseInt(req.params.id));
+
     if (!book) {
         return res.status(404).send('Tokia knyga nerasta!!!')
     }
-    res.send(books)
+    res.send(book)
 });
 
-//POST
+//POST - create
 
 app.post('/api/books', (req, res) => {
     const newBook = {
