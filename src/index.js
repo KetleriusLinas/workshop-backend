@@ -4,7 +4,7 @@
 // Update - app.put()
 // Delete - app.delete()
 
-
+import Joi from 'joi';
 import express from 'express';
 const app = express();
 const port = 5505;
@@ -73,13 +73,64 @@ app.get('/api/books/:id', (req, res) => {
 
 //POST - create
 
+// app.post('/api/books', (req, res) => {
+//     const newBook = {
+//         id: books.length + 1,
+//         author: req.body.author,
+//         title: req.body.title
+//     }
+//     books.push(newBook);
+//     res.send(books);
+// });
+
 app.post('/api/books', (req, res) => {
+
+    const schema = Joi.object({
+        author: Joi.string().min(3).required(),
+        title: Joi.string().min(1).required(),
+    })
+
+    const validation = schema.validate(req.body);
+
+
+    if (validation.error) {
+        res.status(400).send(validation.error.details[0].message);
+        return;
+    }
+
     const newBook = {
         id: books.length + 1,
         author: req.body.author,
         title: req.body.title
     }
     books.push(newBook);
+    res.send(books);
+});
+
+// PUT - update
+
+app.put('/api/books/:id', (req, res) => {
+
+    const book = books.find((book) => book.id === parseInt(req.params.id));
+    if (!book) {
+        return res.status(404).send('Tokia knyga nerasta!!!')
+    }
+
+    const schema = Joi.object({
+        author: Joi.string().min(3).required(),
+        title: Joi.string().min(1).required(),
+    });
+
+    const validation = schema.validate(req.body);
+
+    if (validation.error) {
+        res.status(400).send(validation.error.details[0].message);
+        return;
+    }
+
+    book.author = req.body.author;
+    book.title = req.body.author;
+
     res.send(books);
 });
 
